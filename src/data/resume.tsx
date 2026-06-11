@@ -185,7 +185,7 @@ export const DATA = {
     {
       title: "Json Tree",
       href: "https://json-treevis.vercel.app/",
-      dates: "January 2024 - July 2025",
+      dates: "May 2025 - July 2025",
       active: true,
       description:
         "Visualize JSON data in graph and tree forms. Simplify, explore, and customize effortlessly. Lightning-fast rendering, browser-friendly, and developer-ready.",
@@ -248,7 +248,7 @@ export const DATA = {
     {
       title: "Color Platter",
       href: "https://color-platter-uvhn.vercel.app/",
-      dates: "May 2024 - May 2025",
+      dates: "March 2025 - May 2025",
       active: true,
       description:
         "The essential tool for creating and collecting color palettes. It allows you to generate perfectly matching colors in seconds, even if you are not highly skilled in design!",
@@ -310,7 +310,7 @@ export const DATA = {
     {
       title: "Time Series Data Visualizer",
       href: "https://drive.google.com/file/d/1KwMKR4Y3sOWZCbTjFZt9o4W-q62Ne3Nh/view",
-      dates: "September 2024 - February 2025",
+      dates: "December 2024 - February 2025",
       active: true,
       description:
         "A desktop application built using Next.js and Tauri that allows users to visualize time series data from CSV files.",
