@@ -124,7 +124,7 @@ export const DATA = {
   projects: [
     {
       title: "Stack Decay Score",
-      href: "https://github.com/iamsurajchahar/stack-delay",
+      href: "https://stack-decay.vercel.app",
       dates: "May 2026 - Present",
       active: true,
       description:
@@ -142,6 +142,11 @@ export const DATA = {
         "Socket.io",
       ],
       links: [
+        {
+          type: "Website",
+          href: "https://stack-decay.vercel.app",
+          icon: <Icons.globe className="size-3" />,
+        },
         {
           type: "Source",
           href: "https://github.com/iamsurajchahar/stack-delay",
