@@ -1,0 +1,129 @@
+---
+title: "How to Build and Publish Your First npm CLI Package with TypeScript"
+publishedAt: "2026-06-05"
+summary: "Everything I learned shipping npmlens to the npm registry: project setup, the bin field, versioning, npx support, and avoiding the mistakes that break installs."
+---
+
+When I built [npmlens](https://www.npmjs.com/package/npmlens), a CLI that analyzes the health of npm packages before you install them, I learned that *writing* the tool is only half the work. Packaging it so that `npx npmlens` just works on anyone's machine is the other half. Here is the complete path, including the parts most tutorials skip.
+
+## 1. Set up the project
+
+```bash
+mkdir my-cli && cd my-cli
+npm init -y
+npm install --save-dev typescript @types/node
+npx tsc --init
+```
+
+In `tsconfig.json`, the settings that matter for a CLI:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "declaration": false
+  },
+  "include": ["src"]
+}
+```
+
+## 2. The shebang and the bin field
+
+This is the part that actually turns your package into a command. Your entry file must start with a shebang:
+
+```ts
+#!/usr/bin/env node
+import { program } from "commander";
+
+program
+  .name("my-cli")
+  .description("Does something useful")
+  .version("1.0.0");
+
+program.parse();
+```
+
+And `package.json` must map the command name to the compiled file:
+
+```json
+{
+  "name": "my-cli",
+  "version": "1.0.0",
+  "bin": {
+    "my-cli": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  }
+}
+```
+
+Three details here save you from broken installs:
+
+- **`bin` points at `dist/`, not `src/`**: users get compiled JavaScript, not your TypeScript.
+- **`files: ["dist"]`**: only ship the build output. Without this, your tests, configs, and source all get published.
+- **`prepublishOnly`**: npm runs this automatically before `npm publish`, so you can never publish a stale build. This script has saved me more than once.
+
+## 3. Pick your CLI toolkit
+
+For npmlens I used a small, battle-tested stack:
+
+- **[commander](https://www.npmjs.com/package/commander)**: argument parsing, subcommands, `--help` generation
+- **[chalk](https://www.npmjs.com/package/chalk)**: colored terminal output
+- **[ora](https://www.npmjs.com/package/ora)**: spinners for network-bound commands
+- **[cli-table3](https://www.npmjs.com/package/cli-table3)**: clean tabular output
+
+Note that chalk v5 and ora are ESM-only. If your `tsconfig` outputs CommonJS, installs will succeed but the CLI will crash at runtime with `ERR_REQUIRE_ESM`. Either go full ESM (`"type": "module"` in package.json) or pin the older CommonJS versions.
+
+## 4. Test locally before publishing
+
+Never publish to find out if it works. Link it first:
+
+```bash
+npm run build
+npm link
+my-cli --help   # runs your local build as a global command
+```
+
+Also test the *tarball*, which catches missing files:
+
+```bash
+npm pack --dry-run   # lists exactly what would be published
+```
+
+## 5. Publish
+
+```bash
+npm login
+npm publish
+```
+
+If the name is taken (likely), either pick a new one or publish under your scope: `@yourname/my-cli` with `npm publish --access public`.
+
+## 6. Versioning without pain
+
+Follow semver and let npm handle the bookkeeping:
+
+```bash
+npm version patch   # 1.0.0 -> 1.0.1, also creates a git tag
+npm publish
+```
+
+- **patch**: bug fixes
+- **minor**: new features, backwards compatible
+- **major**: breaking changes (renamed flags, removed commands)
+
+## Mistakes I made so you don't have to
+
+1. **Forgot the shebang.** The command installed fine, then failed with a shell syntax error. The error message gives you no hint that the shebang is the problem.
+2. **Published `src/` by accident.** Before I added the `files` field, my package was 10x larger than it needed to be.
+3. **Didn't test on Windows.** Paths, line endings, and terminal color support all behave differently. If you can, test on both platforms before tagging 1.0.
+
+The whole publish loop (build, link, pack, publish) takes under a minute once it's set up. The barrier to shipping a real tool that other developers `npx` every day is much lower than it looks.

@@ -1,0 +1,121 @@
+---
+title: "JWT Authentication in Node.js: What I Learned Building Auth for Production"
+publishedAt: "2026-01-22"
+summary: "Access tokens, refresh tokens, httpOnly cookies, and Google OAuth 2.0: a practical guide to the auth architecture I shipped for a production wellness platform with 99.9% uptime."
+---
+
+I built the authentication layer for a production wellness platform: JWT plus Google OAuth 2.0, serving a mobile app and an admin panel processing 20,000+ daily actions. JWTs are simple in tutorials and full of sharp edges in production. This is the architecture that held up, and the mistakes it's designed to prevent.
+
+## The two-token model
+
+Never use a single long-lived JWT. Use two:
+
+- **Access token**: short-lived (15 minutes). Sent with every API request. If stolen, it expires before it's worth much.
+- **Refresh token**: long-lived (7 to 30 days). Used only at one endpoint (`/auth/refresh`) to mint new access tokens. Stored server-side (hashed, in the database) so it can be revoked.
+
+```ts
+import jwt from "jsonwebtoken";
+
+function issueTokens(userId: string) {
+  const accessToken = jwt.sign(
+    { sub: userId },
+    process.env.JWT_ACCESS_SECRET!,
+    { expiresIn: "15m" }
+  );
+
+  const refreshToken = jwt.sign(
+    { sub: userId, type: "refresh" },
+    process.env.JWT_REFRESH_SECRET!,
+    { expiresIn: "7d" }
+  );
+
+  return { accessToken, refreshToken };
+}
+```
+
+Two separate secrets. If the access secret ever leaks, your refresh tokens are still safe.
+
+## Where to store tokens on the client
+
+This is the most argued-about part of JWT auth, so here's the short version:
+
+| Storage | XSS-safe? | CSRF-safe? | Verdict |
+| --- | --- | --- | --- |
+| `localStorage` | No | Yes | Avoid for refresh tokens |
+| `httpOnly` cookie | Yes | Needs CSRF protection | Best for web |
+| Memory (JS variable) | Mostly | Yes | Good for access tokens |
+
+The pattern that worked for us: **refresh token in an `httpOnly`, `Secure`, `SameSite=Strict` cookie; access token kept in memory** and re-fetched via `/auth/refresh` on page load. XSS can't read the cookie, and `SameSite=Strict` blocks cross-site request forgery for the refresh endpoint.
+
+For the mobile app, both tokens live in the platform's secure storage (Keychain / Keystore). Cookies aren't the right tool there.
+
+## The auth middleware
+
+Keep verification small and boring:
+
+```ts
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const header = req.headers.authorization;
+  if (!header?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing token" });
+  }
+
+  try {
+    const payload = jwt.verify(header.slice(7), process.env.JWT_ACCESS_SECRET!);
+    req.userId = payload.sub as string;
+    next();
+  } catch {
+    return res.status(401).json({ error: "Invalid or expired token" });
+  }
+}
+```
+
+Details that matter:
+
+- **`jwt.verify`, never `jwt.decode`**: `decode` does not check the signature. Every year someone ships this bug.
+- **Pin the algorithm**: pass `{ algorithms: ["HS256"] }` to `verify` so an attacker can't downgrade to `alg: none`.
+- **Return 401 for both missing and invalid tokens**: don't leak which one it was.
+
+## Refresh token rotation
+
+When the client calls `/auth/refresh`, don't just issue a new access token. Issue a **new refresh token too, and invalidate the old one**. This is rotation, and it means a stolen refresh token only works until the legitimate user refreshes next. If a token is replayed after rotation, revoke the whole session family. That's your breach signal.
+
+## Adding Google OAuth 2.0
+
+OAuth doesn't replace your JWT layer; it feeds it. The flow we shipped:
+
+1. Client gets an ID token from Google Sign-In
+2. Backend verifies it with `google-auth-library` (`verifyIdToken` checks signature, audience, and expiry)
+3. Look up or create the user by the **`sub` claim** (Google's stable user ID, not email, which can change)
+4. Issue *your own* access + refresh tokens, same as password login
+
+```ts
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+async function verifyGoogleToken(idToken: string) {
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  return ticket.getPayload(); // contains sub, email, name, picture
+}
+```
+
+After this point, Google users and password users are identical to the rest of your API.
+
+## A production checklist
+
+- [ ] Access tokens expire in minutes, not days
+- [ ] Refresh tokens are hashed in the database and rotated on every use
+- [ ] Separate signing secrets per token type, loaded from env, never committed
+- [ ] Algorithm pinned in `verify`
+- [ ] Logout deletes the refresh token server-side (access tokens just expire)
+- [ ] Rate limiting on `/auth/login` and `/auth/refresh`
+- [ ] Password hashing with bcrypt/argon2 (JWT solves sessions, not storage)
+
+None of this is exotic. It's a small number of decisions made deliberately. Make them once, write them down, and auth becomes the most boring part of your API. That's the goal.

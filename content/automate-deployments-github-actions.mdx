@@ -1,0 +1,110 @@
+---
+title: "Zero-Downtime Deployments for React Apps with GitHub Actions"
+publishedAt: "2026-03-14"
+summary: "How I automated a CI/CD pipeline for a Vite + TypeScript app that cut deployment time by 75% and handled 13+ weekly deployments, with the exact workflow file and caching strategy."
+---
+
+During my freelance work I inherited a React (Vite + TypeScript) project that was deployed by hand: build locally, zip the `dist` folder, upload it. Every deploy took attention, and every deploy was a chance to ship the wrong build. Moving it to GitHub Actions cut deployment time by ~75% and let us push 13+ deployments a week with zero downtime. Here's the setup, end to end.
+
+## The goal
+
+On every push to `main`:
+
+1. Install dependencies (cached)
+2. Type-check and lint
+3. Build the production bundle
+4. Deploy, only if everything above passed
+
+## The workflow file
+
+Create `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        run: npm run deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+```
+
+A few choices in this file matter more than they look:
+
+- **`npm ci` instead of `npm install`**: installs exactly what's in the lockfile, fails loudly if the lockfile is out of sync. Deterministic builds start here.
+- **`cache: "npm"` on setup-node**: caches `~/.npm` between runs. This alone took our install step from ~90 seconds to ~15.
+- **`concurrency` with `cancel-in-progress`**: if you push twice quickly, the stale deploy is cancelled instead of racing the new one. This is the cheapest zero-downtime insurance you can buy.
+- **Type-check as a separate step**: `vite build` does *not* type-check. Without `tsc --noEmit`, type errors ship to production silently.
+
+## Secrets, not hardcoded tokens
+
+Anything sensitive goes in **Settings → Secrets and variables → Actions**, never in the workflow file. Reference them as `${{ secrets.NAME }}`. They're encrypted, masked in logs, and invisible to forks.
+
+## Zero-downtime: what it actually means here
+
+For a static frontend, zero-downtime is mostly about *atomicity*: never serve a half-uploaded build. Two patterns work:
+
+1. **Platform-managed (Vercel, Netlify, Cloudflare Pages)**: every deploy builds to an immutable URL and traffic flips atomically. You get this for free.
+2. **Self-managed (S3/nginx/VPS)**: upload the new build to a versioned directory, then atomically switch a symlink or update the routing config. Never `rm -rf` the live directory and re-upload into it.
+
+One more detail: make sure `index.html` is served with `no-cache` while hashed assets (`assets/*.js`) get long cache lifetimes. Vite hashes filenames for exactly this reason. Stale HTML pointing at deleted chunks is the classic "white screen after deploy" bug.
+
+## Add a PR gate
+
+The same checks should run on pull requests, minus the deploy:
+
+```yaml
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+```
+
+Then wrap the deploy step in a condition:
+
+```yaml
+      - name: Deploy
+        if: github.event_name == 'push'
+        run: npm run deploy
+```
+
+Now broken code can't reach `main` without someone explicitly ignoring a red check.
+
+## Results
+
+- Deploys went from a ~20-minute manual ritual to a ~4-minute hands-off pipeline
+- 13+ deployments per week, including Friday afternoons, without fear
+- Every production build is traceable to an exact commit and a green check run
+
+If you deploy anything by hand more than once a week, this is two hours of setup that pays for itself by Thursday.
