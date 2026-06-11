@@ -154,7 +154,7 @@ export const DATA = {
     {
       title: "npmlens",
       href: "https://www.npmjs.com/package/npmlens",
-      dates: "June 2026 - June 2026",
+      dates: "June 2026 - Present",
       active: true,
       description:
         "Know everything about an npm package before you install it: health score, security, bundle size, dependency tree, and side-by-side comparison. Published on npm with 300+ weekly downloads.",
@@ -185,7 +185,7 @@ export const DATA = {
     {
       title: "Json Tree",
       href: "https://json-treevis.vercel.app/",
-      dates: "2025",
+      dates: "January 2024 - July 2025",
       active: true,
       description:
         "Visualize JSON data in graph and tree forms. Simplify, explore, and customize effortlessly. Lightning-fast rendering, browser-friendly, and developer-ready.",
@@ -248,7 +248,7 @@ export const DATA = {
     {
       title: "Color Platter",
       href: "https://color-platter-uvhn.vercel.app/",
-      dates: "2024 - 2025",
+      dates: "May 2024 - May 2025",
       active: true,
       description:
         "The essential tool for creating and collecting color palettes. It allows you to generate perfectly matching colors in seconds, even if you are not highly skilled in design!",
