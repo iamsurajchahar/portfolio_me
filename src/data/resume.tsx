@@ -188,6 +188,41 @@ export const DATA = {
       video: "",
     },
     {
+      title: "Dukaan Saathi",
+      href: "https://dukaan-saathi-client.vercel.app/",
+      dates: "June 2026 - Present",
+      active: true,
+      description:
+        "Smart inventory management for kirana stores. Studies past sales to tell shopkeepers exactly what to restock, how much, and when, with low-stock alerts, sales analytics, and Hindi language support.",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "TanStack Query",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Gemini AI",
+        "Razorpay",
+        "Turborepo",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://dukaan-saathi-client.vercel.app/",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/iamsurajchahar/dukaan_saathi",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/dukaan-saathi.png",
+      video: "",
+    },
+    {
       title: "Json Tree",
       href: "https://jsontreeviewer.vercel.app/",
       dates: "May 2025 - July 2025",
@@ -216,38 +251,6 @@ export const DATA = {
         },
       ],
       image: "/json-tree-logo.png",
-      video: "",
-    },
-    {
-      title: "Color Platter",
-      href: "https://color-platter-uvhn.vercel.app/",
-      dates: "March 2025 - May 2025",
-      active: true,
-      description:
-        "The essential tool for creating and collecting color palettes. It allows you to generate perfectly matching colors in seconds, even if you are not highly skilled in design!",
-      technologies: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "Redux Toolkit",
-        "Sass",
-        "Chroma.js",
-        "Jest",
-        "Cypress",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://color-platter-uvhn.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/iamsurajchahar/color_platter",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/color-platter-logo.png",
       video: "",
     },
     {
