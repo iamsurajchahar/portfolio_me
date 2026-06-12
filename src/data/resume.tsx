@@ -189,7 +189,7 @@ export const DATA = {
     },
     {
       title: "Json Tree",
-      href: "https://json-treevis.vercel.app/",
+      href: "https://jsontreeviewer.vercel.app/",
       dates: "May 2025 - July 2025",
       active: true,
       description:
@@ -206,7 +206,7 @@ export const DATA = {
       links: [
         {
           type: "Website",
-          href: "https://json-treevis.vercel.app/",
+          href: "https://jsontreeviewer.vercel.app/",
           icon: <Icons.globe className="size-3" />,
         },
         {
@@ -216,38 +216,6 @@ export const DATA = {
         },
       ],
       image: "/json-tree-logo.png",
-      video: "",
-    },
-    {
-      title: "AI Resume Shortlister",
-      href: "https://ai-resume-shortlister-frontend.vercel.app/",
-      dates: "May 2025 - August 2025",
-      active: true,
-      description:
-        "An intelligent, AI-powered application designed to streamline the recruitment process by automatically shortlisting resumes.",
-      technologies: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-        "Hono",
-        "MongoDB",
-        "OpenAI",
-        "LangChain",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://ai-resume-shortlister-frontend.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/iamsurajchahar/ai-resume-shortlister",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "/ai-resume-shortlister-logo.png",
       video: "",
     },
     {
