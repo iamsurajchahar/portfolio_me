@@ -125,7 +125,7 @@ export const DATA = {
     {
       title: "Stack Decay Score",
       href: "https://stack-decay.vercel.app",
-      dates: "June 2025",
+      dates: "June 2026",
       active: true,
       description:
         "Track and score the health of your project dependencies: maintenance activity, community strength, known vulnerabilities, end-of-life risk, and license compliance, all in one dashboard.",
@@ -190,7 +190,7 @@ export const DATA = {
     {
       title: "Dukaan Saathi",
       href: "https://dukaan-saathi-client.vercel.app/",
-      dates: "March 2025",
+      dates: "March 2026",
       active: true,
       description:
         "Smart inventory management for kirana stores. Studies past sales to tell shopkeepers exactly what to restock, how much, and when, with low-stock alerts, sales analytics, and Hindi language support.",
