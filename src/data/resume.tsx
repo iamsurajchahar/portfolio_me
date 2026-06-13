@@ -15,8 +15,8 @@ export const DATA = {
   skills: {
     Programming: ["C++", "JavaScript", "TypeScript"],
     "Frontend Development": ["React.js", "Redux", "Next.js", "TailwindCSS", "Tauri"],
-    "Backend Development": ["Node.js", "Express.js", "MongoDB", "Redis", "SQL", "PostgreSQL", "Socket.io"],
-    "DevOps & Cloud": ["Docker", "AWS", "Ansible", "CloudFormation"],
+    "Backend Development": ["Node.js", "Express.js", "MongoDB", "Redis", "Socket.io"],
+    "DevOps & Cloud": ["Docker", "AWS", "Terraform", "Ansible", "Jenkins", "CloudFormation"],
     "Tools & Utilities": ["Git", "Postman", "Bash/Shell Scripting", "Linux"],
   },
   navbar: [
@@ -83,7 +83,7 @@ export const DATA = {
       start: "December 2025",
       end: "Present",
       description:
-        "Chartered the backend's entire foundation for Innersmith, a wellness platform, building 212+ REST APIs and conducting R&D on scalable architecture, resulting in a 30% decrease in development complexity.\nEngineered secure user authentication using JWT and Google OAuth 2.0, alongside CloudFront signed-URL media access, improving API performance by 35% with zero-downtime deployment and 99.9% API uptime across production.\nEngineered a production-ready admin panel processing 20,000+ daily actions, leveraging 15+ third-party integrations to achieve a 50% reduction in manual workload.",
+        "Chartered the backend's entire foundation for Innersmith, a wellness platform, building 212+ REST APIs with Node.js and Express while conducting R&D on scalable architecture, resulting in a 30% decrease in development complexity.\nDesigned secure user authentication using JWT and Google OAuth 2.0, alongside CloudFront signed-URL media access, improving API performance by 35% with zero-downtime deployment and 99.9% API uptime across production.\nDelivered a production-grade admin panel handling high-volume daily operations and integrating multiple third-party services to streamline workflows, driving a significant reduction in manual effort.",
     },
     {
       company: "Heliverse Technologies",
@@ -115,10 +115,10 @@ export const DATA = {
       school: "Vellore Institute of Technology",
       href: "https://vit.ac.in",
       degree: "B.Tech in Computer Science and Engineering (Specialization in Gaming Technology)",
-      cgpa: "8.5/10",
+      cgpa: "8.41/10",
       logoUrl: "/vit-logo.svg",
-      start: "December 2020",
-      end: "December 2024",
+      start: "October 2020",
+      end: "October 2024",
     },
   ],
   projects: [
