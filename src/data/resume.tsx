@@ -128,7 +128,7 @@ export const DATA = {
       dates: "June 2026",
       active: true,
       description:
-        "Track and score the health of your project dependencies: maintenance activity, community strength, known vulnerabilities, end-of-life risk, and license compliance, all in one dashboard.",
+        "A dependency health monitoring dashboard that scores 1000+ packages from npm, PyPI, and crates.io on a 0–100 scale across security, maintenance, end-of-life, community, and licensing using OSV and GitHub Advisory data. An Express + MongoDB backend with Redis/BullMQ queues processes concurrent scans, cutting repeat analysis time by 60% via cached results and webhook-triggered re-scans, while React dashboards add trend analysis, dependency-tree visualization, PDF/CSV export, and weekly digest emails.",
       technologies: [
         "React",
         "TypeScript",
@@ -139,6 +139,8 @@ export const DATA = {
         "MongoDB",
         "Redis",
         "BullMQ",
+        "TanStack Query",
+        "Recharts",
         "Socket.io",
       ],
       links: [
@@ -193,7 +195,7 @@ export const DATA = {
       dates: "March 2026",
       active: true,
       description:
-        "Smart inventory management for kirana stores. Studies past sales to tell shopkeepers exactly what to restock, how much, and when, with low-stock alerts, sales analytics, and Hindi language support.",
+        "An AI-powered inventory platform for kirana stores that forecasts demand from historical sales using Google Gemini AI and recommends reorder quantities and restock deadlines. Built on a secure MongoDB + Express backend with JWT authentication, Razorpay payments, CSV bulk import, and Node-cron low-stock alerts, supporting multi-store management from a single dashboard. Piloted across 10+ kirana stores in real-world testing with full Hindi support to improve accessibility and adoption.",
       technologies: [
         "Next.js",
         "React",
@@ -205,6 +207,7 @@ export const DATA = {
         "MongoDB",
         "Gemini AI",
         "Razorpay",
+        "Node-cron",
         "Turborepo",
       ],
       links: [
