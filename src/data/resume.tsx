@@ -81,9 +81,9 @@ export const DATA = {
       title: "Software Development Engineer",
       logoUrl: "/rnf-logo.png",
       start: "December 2025",
-      end: "Present",
+      end: "July 2026",
       description:
-        "Chartered the backend's entire foundation for Innersmith, a wellness platform, building 212+ REST APIs with Node.js and Express while conducting R&D on scalable architecture, resulting in a 30% decrease in development complexity.\nDesigned secure user authentication using JWT and Google OAuth 2.0, alongside CloudFront signed-URL media access, improving API performance by 35% with zero-downtime deployment and 99.9% API uptime across production.\nDelivered a production-grade admin panel handling high-volume daily operations and integrating multiple third-party services to streamline workflows, driving a significant reduction in manual effort.",
+        "Chartered the backend's entire foundation for Innersmith, a wellness platform, building 100+ REST APIs with Node.js and Express while conducting R&D on scalable architecture, resulting in a cleaner, more maintainable codebase.\nDesigned secure user authentication using JWT and Google OAuth 2.0, alongside CloudFront signed-URL media access, supporting zero-downtime deployments and 99.9% API uptime across production.\nDelivered a production-grade admin panel handling high-volume daily operations and integrating multiple third-party services to streamline workflows, driving a significant reduction in manual effort.",
     },
     {
       company: "Heliverse Technologies",
@@ -95,7 +95,7 @@ export const DATA = {
       start: "May 2025",
       end: "October 2025",
       description:
-        "Implemented a CMS-powered web application using Next.js and Sanity.io, enabling seamless client-side content updates without code changes and optimizing content management workflows by 70%.\nOrchestrated the construction of a resilient backend framework utilizing Hono and Prisma, integrating JWT-based authentication and RESTful APIs, which enhanced system uptime by 20%.\nSpearheaded the development and deployment of three distinct gaming applications, exceeding quality assurance benchmarks and achieving complete defect-free releases within all project timelines.",
+        "Integrated a Next.js and Sanity.io CMS, empowering content teams to perform over 500 direct content edits, eliminating the need for developer involvement in routine updates.\nOrchestrated the construction of a resilient backend framework utilizing Hono and Prisma, integrating JWT-based authentication and RESTful APIs, which improved overall system reliability.\nSpearheaded the development and deployment of three distinct gaming applications, meeting quality assurance benchmarks and achieving stable, defect-free releases within all project timelines.",
     },
     {
       company: "Freelance",
@@ -107,7 +107,7 @@ export const DATA = {
       start: "October 2024",
       end: "April 2025",
       description:
-        "Automated CI/CD pipeline using GitHub Actions for a React (Vite + TypeScript) application that reduced deployment time by 75%, handled 13+ weekly deployments with zero downtime, and enabled fully automated updates on code push.\nTransformed 3 client React applications with responsive architecture and reusable components, improving rendering speed and reducing bundle size by 28%.\nPioneered a responsive Next.js application featuring optimized state management across four key pages; this reduced data fetching speeds by 50% and reduced latency, improving response times by 30%.",
+        "Automated CI/CD pipeline using GitHub Actions for a React (Vite + TypeScript) application that reduced deployment time by 70%, handled 5+ weekly deployments with zero downtime, and enabled fully automated updates on code push.\nTransformed 3 client React applications with responsive architecture and reusable components, improving rendering speed and reducing bundle size by 28%.\nPioneered a responsive Next.js application featuring optimized state management across four key pages, restructuring data fetching to improve response times by 30%.",
     },
   ],
   education: [
